@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "version": "1.00",
+    "name": "My Simple Extension",
+    "icons":{
+        "32": "Icon32.png"
+    },
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "scripting"
+    ],
+    "host_permissions":[
+        "https://*/*",
+        "https://*/*"
+    ]
+    
+}

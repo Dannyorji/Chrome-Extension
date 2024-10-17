@@ -1,10 +1,27 @@
-import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { useState } from 'react'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [colour, setColour] = useState("")
+  const onClick = async () => {
+    // Query for the active tab in the current window
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    if (tab.id) {
+      // Execute the script in the active tab
+      chrome.scripting.executeScript<string[], void>({
+        target: { tabId: tab.id },
+        args: [colour],
+        func: (colour) => {
+          document.body.style.backgroundColor= colour;
+        }
+      });
+    } else {
+      console.error('No active tab found');
+    }
+  }
 
   return (
     <>
@@ -16,10 +33,11 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>My Simple Extension</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <input type="color" onChange={(e)=> setColour(e.currentTarget.value)} value="" />
+        <button onClick={onClick}>
+          Click me
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
@@ -29,7 +47,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
